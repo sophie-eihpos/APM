@@ -1,0 +1,9 @@
+thead {
+    font-size: medium;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+th {
+    /* color does not work in thead, have to put it in th */
+    color: #337AB7;
+}
