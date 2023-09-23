@@ -1,10 +1,12 @@
 import { Component, OnInit } from "@angular/core";
 import { IProduct } from "./product";
+import { ProductService } from "./product.service";
 
 @Component({
     selector: 'pm-products',
     templateUrl: './product-list.component.html',
-    styleUrls: ['./product-list.component.css']
+    styleUrls: ['./product-list.component.css'],
+    providers: [ProductService] // only register the service for this component and its children
 })
 export class ProductListComponent implements OnInit {
     pageTitle = 'Product List';
@@ -26,16 +28,6 @@ export class ProductListComponent implements OnInit {
 
     products: IProduct[] = [
         {
-          "productId": 1,
-          "productName": "Leaf Rake",
-          "productCode": "GDN-0011",
-          "releaseDate": "March 19, 2021",
-          "description": "Leaf rake with 48-inch wooden handle.",
-          "price": 19.95,
-          "starRating": 3.2,
-          "imageUrl": "assets/images/leaf_rake.png"
-        },
-        {
           "productId": 2,
           "productName": "Garden Cart",
           "productCode": "GDN-0023",
@@ -54,28 +46,11 @@ export class ProductListComponent implements OnInit {
           "price": 8.9,
           "starRating": 4.8,
           "imageUrl": "assets/images/hammer.png"
-        },
-        {
-          "productId": 8,
-          "productName": "Saw",
-          "productCode": "TBX-0022",
-          "releaseDate": "May 15, 2021",
-          "description": "15-inch steel blade hand saw",
-          "price": 11.55,
-          "starRating": 3.7,
-          "imageUrl": "assets/images/saw.png"
-        },
-        {
-          "productId": 10,
-          "productName": "Video Game Controller",
-          "productCode": "GMG-0042",
-          "releaseDate": "October 15, 2020",
-          "description": "Standard two-button video game controller",
-          "price": 35.95,
-          "starRating": 4.6,
-          "imageUrl": "assets/images/xbox-controller.png"
         }
       ];
+
+    constructor(private productService: ProductService) {        
+    }
 
     performFilter(filterBy: string): IProduct[] {
         filterBy = filterBy.toLocaleLowerCase();
@@ -89,9 +64,13 @@ export class ProductListComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.listFilter = 'cart';
+        this.products = this.productService.getProduct();
+        this.filteredProducts = this.products;
 
-        // had to add this to make initial filter on page load work
+        // remove this so the inital page display full product list
+        // this.listFilter = 'cart';
+
+        // had to add this to make initial filter with 'cart' on page load work
         // or change this._listFilter = 'cart'; to be without underscore
         // this.filteredProducts = this.performFilter(this._listFilter);
     }
