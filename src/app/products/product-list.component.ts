@@ -1,6 +1,7 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnDestroy, OnInit } from "@angular/core";
 import { IProduct } from "./product";
 import { ProductService } from "./product.service";
+import { Subscription } from "rxjs";
 
 @Component({
     selector: 'pm-products',
@@ -8,11 +9,11 @@ import { ProductService } from "./product.service";
     styleUrls: ['./product-list.component.css'],
     providers: [ProductService] // only register the service for this component and its children
 })
-export class ProductListComponent implements OnInit {
+export class ProductListComponent implements OnInit, OnDestroy {
     pageTitle = 'Product List';
     imageWidth = 50;
     imageMargin = 2;
-    showImage = false;
+    showImage = false;    
 
     private _listFilter: string = '';
     get listFilter(): string {
@@ -25,29 +26,10 @@ export class ProductListComponent implements OnInit {
     }
 
     filteredProducts: IProduct[] = [];
+    products: IProduct[] = [];
 
-    products: IProduct[] = [
-        {
-          "productId": 2,
-          "productName": "Garden Cart",
-          "productCode": "GDN-0023",
-          "releaseDate": "March 18, 2021",
-          "description": "15 gallon capacity rolling garden cart",
-          "price": 32.99,
-          "starRating": 4.2,
-          "imageUrl": "assets/images/garden_cart.png"
-        },
-        {
-          "productId": 5,
-          "productName": "Hammer",
-          "productCode": "TBX-0048",
-          "releaseDate": "May 21, 2021",
-          "description": "Curved claw steel hammer",
-          "price": 8.9,
-          "starRating": 4.8,
-          "imageUrl": "assets/images/hammer.png"
-        }
-      ];
+    sub!: Subscription; // add ! to tell it the value will be assigned later
+    errorMessage: string = '';
 
     constructor(private productService: ProductService) {        
     }
@@ -64,15 +46,24 @@ export class ProductListComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.products = this.productService.getProduct();
-        this.filteredProducts = this.products;
-
+        this.sub = this.productService.getProduct().subscribe({
+            next: products => {
+                this.products = products;
+                this.filteredProducts = this.products;
+            },
+            error: err => this.errorMessage = err
+        });
+        
         // remove this so the inital page display full product list
         // this.listFilter = 'cart';
 
         // had to add this to make initial filter with 'cart' on page load work
         // or change this._listFilter = 'cart'; to be without underscore
         // this.filteredProducts = this.performFilter(this._listFilter);
+    }
+
+    ngOnDestroy(): void {
+        this.sub.unsubscribe();
     }
 
     onRatingClicked(message: string): void {
