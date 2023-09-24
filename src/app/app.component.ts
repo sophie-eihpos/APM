@@ -14,7 +14,7 @@ import { Component } from "@angular/core";
       <!-- <li><a [routerLink]="['/welcome']">Home</a></li> -->
       <!-- <li><a [routerLink]="['/products']">Product List</a></li> -->
             
-      <!-- If the array only contains the route path: -->
+      <!-- If the array only contains the route path, but has no parameter value like Id of the product: -->
       <li><a class='nav-link' routerLink='/welcome'>Home</a></li>
       <li><a class='nav-link' routerLink='/products'>Product List</a></li>
     </ul>
