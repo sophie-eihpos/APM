@@ -8,7 +8,7 @@ import { Subscription } from "rxjs";
     // selector: 'pm-products',
     templateUrl: './product-list.component.html',
     styleUrls: ['./product-list.component.css'],
-    providers: [ProductService] // only register the service for this component and its children
+    // providers: [ProductService] // only register the service for this component and its children
 })
 export class ProductListComponent implements OnInit, OnDestroy {
     pageTitle = 'Product List';
@@ -47,7 +47,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        this.sub = this.productService.getProduct().subscribe({
+        this.sub = this.productService.getProducts().subscribe({
             next: products => {
                 this.products = products;
                 this.filteredProducts = this.products;
