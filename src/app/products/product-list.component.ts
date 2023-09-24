@@ -4,7 +4,8 @@ import { ProductService } from "./product.service";
 import { Subscription } from "rxjs";
 
 @Component({
-    selector: 'pm-products',
+    // remove the selector because we no long nest this component
+    // selector: 'pm-products',
     templateUrl: './product-list.component.html',
     styleUrls: ['./product-list.component.css'],
     providers: [ProductService] // only register the service for this component and its children
